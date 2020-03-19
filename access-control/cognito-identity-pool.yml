@@ -1,0 +1,10 @@
+Resources:
+    CognitoIdentityPool:
+        Type: AWS::Cognito::IdentityPool
+        Properties:
+            AllowUnauthenticatedIdentities: false
+            IdentityPoolName: ${self:provider.stackTags.name}-v1-identity-pool
+Outputs:
+    IdentityPoolId:
+        Value:
+            Ref: CognitoIdentityPool

@@ -1,0 +1,51 @@
+Resources:
+    CognitoUserPool:
+        Type: AWS::Cognito::UserPool
+        Properties:
+            UserPoolName: ${self:provider.stackTags.name}-v1-user-pool
+            UsernameAttributes:
+                - email
+            AutoVerifiedAttributes:
+                - email
+            LambdaConfig:
+                # use this to confgure custom actions within cognito actions
+                # PreSignUp: !GetAtt V1DashcognitoDashpreDashsignDashupLambdaFunction.Arn
+                # PostConfirmation: !GetAtt V1DashcognitoDashpostDashsignDashupLambdaFunction.Arn
+            Policies:
+                PasswordPolicy:
+                    MinimumLength: 8
+                    RequireLowercase: true
+                    RequireNumbers: true
+                    RequireSymbols: true
+                    RequireUppercase: true
+            MfaConfiguration: OFF
+            UserPoolAddOns:
+                    AdvancedSecurityMode: OFF
+            # EmailConfiguration:
+            #     From: "syngenta.dpe.usco+enogen@gmail.com"
+            #     ReplyToEmailAddress: "syngenta.dpe.usco+enogen@gmail.com"
+    CognitioDomainConfig:
+        Type: AWS::Cognito::UserPoolDomain
+        Properties:
+            UserPoolId: !Ref CognitoUserPool
+            Domain: syn-auth
+    PreSignUpLambdaInvokePermission:
+        Type: AWS::Lambda::Permission
+        Properties:
+            Action: lambda:*
+            Principal: cognito-idp.amazonaws.com
+            FunctionName: !GetAtt V1DashcognitoDashpreDashsignDashupLambdaFunction.Arn
+            SourceArn: !GetAtt CognitoUserPool.Arn
+    PostSignUpLambdaInvokePermission:
+        Type: AWS::Lambda::Permission
+        Properties:
+            Action: lambda:*
+            Principal: cognito-idp.amazonaws.com
+            FunctionName: !GetAtt V1DashcognitoDashpostDashsignDashupLambdaFunction.Arn
+            SourceArn: !GetAtt CognitoUserPool.Arn
+# We will need to also include IdentityProvider here https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolidentityprovider.html
+# Print out the Id of the User Pool that is created
+Outputs:
+    UserPoolId:
+        Value:
+            Ref: CognitoUserPool
