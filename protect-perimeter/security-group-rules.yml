@@ -57,11 +57,6 @@ groups:
                     IpProtocol: tcp
                     FromPort: 3306
                     ToPort: 3306
-                -
-                    IpProtocol: tcp
-                    CidrIp: 0.0.0.0/0
-                    FromPort: 3306
-                    ToPort: 3306
         lambda:
             inbound:
                 -
@@ -83,11 +78,6 @@ groups:
                         Ref: AppSecurityGroup
                     Description: App access to DB
                     IpProtocol: tcp
-                    FromPort: 3306
-                    ToPort: 3306
-                -
-                    IpProtocol: tcp
-                    CidrIp: 0.0.0.0/0
                     FromPort: 3306
                     ToPort: 3306
         lambda:
@@ -112,11 +102,6 @@ groups:
                         Ref: AppSecurityGroup
                     Description: App access to DB
                     IpProtocol: tcp
-                    FromPort: 3306
-                    ToPort: 3306
-                -
-                    IpProtocol: tcp
-                    CidrIp: 0.0.0.0/0
                     FromPort: 3306
                     ToPort: 3306
         lambda:
